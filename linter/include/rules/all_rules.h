@@ -27,3 +27,4 @@
 #include "select_in_weight.h"
 #include "target_unpacked_array_concatenation.h"
 #include "type_casting.h"
+#include "extend_class.h"

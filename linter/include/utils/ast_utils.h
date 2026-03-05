@@ -11,3 +11,11 @@
 using namespace SURELOG;
 
 NodeId findEnclosingModule(const FileContent* fC, NodeId node);
+
+bool isBuiltinClass(std::string className);
+
+std::string getStringConst(const FileContent* fC, NodeId id);
+
+std::string getPrefix(const FileContent* fC, NodeId id);
+
+std::string getFullName(const FileContent* fC, NodeId id);

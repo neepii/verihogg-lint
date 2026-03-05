@@ -37,6 +37,7 @@ void runAllRules(const FileContent* fC, ErrorContainer* errors,
   checkInsideOperator(fC, errors, symbols);
   checkInsideOperatorRange(fC, errors, symbols);
   checkTypeCasting(fC, errors, symbols);
+  checkExtendClass(fC, errors, symbols);
 }
 
 void runAllRulesOnDesign(Design* design, const vpiHandle& UHDMdesign,
