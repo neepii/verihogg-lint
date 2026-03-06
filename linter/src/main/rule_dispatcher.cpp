@@ -39,7 +39,7 @@ void runAllRules(const FileContent* fC, ErrorContainer* errors,
   checkTypeCasting(fC, errors, symbols);
   checkExtendClass(fC, errors, symbols);
   checkDuplicateConstructor(fC, errors, symbols);
-  // checkDuplicateClass(fC, errors, symbols);
+  checkDuplicateClass(fC, errors, symbols);
   // ExternConstraintUndeclared(fC, errors, symbols);
   // checkExternFunctionUndeclared(fC, errors, symbols);
  // Analyzer::checkExternTaskUndeclared(fC, errors, symbols);
