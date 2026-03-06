@@ -50,11 +50,12 @@ void checkExtendClass(const FileContent* fC, ErrorContainer* errors,
     if (isBuiltinClass(className) || superclassName == "") continue;
 
     std::vector<NodeId> superIdVector = classMap[superclassName];
-
     bool found = false;
     for (auto& superId : superIdVector) {
       const std::string superPrefix = getPrefix(fC, superId);
       const std::string_view view = mainPrefix;
+      std::cerr << superPrefix << superclassName << " " << mainPrefix
+                << className << std::endl;
 
       const size_t superSize = superPrefix.size();
       const size_t mainSize = superPrefix.size();
@@ -65,7 +66,7 @@ void checkExtendClass(const FileContent* fC, ErrorContainer* errors,
       }
     }
 
-    if (found) break;
+    if (found) continue;
 
     reportError(fC, id, superclassName, ErrorDefinition::LINT_EXTEND_CLASS,
                 errors, symbols);
