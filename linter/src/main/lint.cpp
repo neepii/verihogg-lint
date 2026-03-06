@@ -4,24 +4,17 @@
 #include "Surelog/API/Surelog.h"
 #include "Surelog/CommandLine/CommandLineParser.h"
 #include "main/rule_dispatcher.h"
+#include "utils/init.h"
 
 using namespace SURELOG;
 
 int main(int argc, const char** argv) {
   auto symbolTable = std::make_unique<SymbolTable>();
   auto errors = std::make_unique<ErrorContainer>(symbolTable.get());
-  auto clp = std::make_unique<CommandLineParser>(errors.get(), symbolTable.get(), false, false);
+  auto clp = std::make_unique<CommandLineParser>(
+      errors.get(), symbolTable.get(), false, false);
 
-  clp->noPython();
-  clp->setParse(true);
-  clp->setCompile(true);
-  clp->setElaborate(true);
-  clp->setwritePpOutput(true);
-  clp->setCacheAllowed(false);
-  clp->setFilterInfo();
-  clp->setFilterNote();
-  clp->setFilterWarning();
-
+  initCommandLineParser(clp.get());
   bool success = clp->parseCommandLine(argc, argv);
   Design* the_design = nullptr;
   scompiler* compiler = nullptr;
@@ -29,9 +22,9 @@ int main(int argc, const char** argv) {
 
   if (success && !clp->help()) {
     try {
-    compiler = start_compiler(clp.get());
-    the_design = get_design(compiler);
-    UHDMdesign = get_uhdm_design(compiler);
+      compiler = start_compiler(clp.get());
+      the_design = get_design(compiler);
+      UHDMdesign = get_uhdm_design(compiler);
     } catch (const std::exception& e) {
       std::cerr << "Compiler error: " << e.what() << '\n';
       return 1;

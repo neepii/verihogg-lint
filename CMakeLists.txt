@@ -12,7 +12,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+enable_testing()
+add_subdirectory(tests)
+set(SURELOG_BUILD_TESTS OFF)
 add_subdirectory(external/Surelog)
+
+add_subdirectory(external/Surelog/third_party/googletest EXCLUDE_FROM_ALL)
+set(GTEST_INCLUDE_DIRS
+    external/Surelog/third_party/googletest/googletest/include
+    external/Surelog/third_party/googletest/googlemock/include)
+
+add_subdirectory(linter)
 
 set(LINTER_SRC
     linter/src/main/lint.cpp
@@ -20,6 +30,7 @@ set(LINTER_SRC
     linter/src/utils/location_utils.cpp
     linter/src/utils/name_utils.cpp
     linter/src/utils/string_utils.cpp
+    linter/src/utils/init.cpp
     linter/src/rules/class_variable_lifetime.cpp
     linter/src/rules/dpi_decl_string.cpp
     linter/src/rules/fatal_rule.cpp
@@ -53,9 +64,9 @@ set(LINTER_SRC
     linter/src/rules/duplicate_class.cpp
     linter/src/rules/extern_constraint_undeclared.cpp
 )
-
 #     linter/src/rules/extern_function_undeclared.cpp
 #     linter/src/rules/extern_task_undeclared.cpp
+
 
 foreach(f ${LINTER_SRC})
   if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${f}")
