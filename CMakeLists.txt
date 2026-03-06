@@ -50,12 +50,12 @@ set(LINTER_SRC
     linter/src/rules/type_casting.cpp
     linter/src/rules/extend_class.cpp
     linter/src/rules/duplicate_constructor.cpp
-    linter/src/rules/duplicate_class.cpp    
-    
+    linter/src/rules/duplicate_class.cpp
+    linter/src/rules/extern_constraint_undeclared.cpp
 )
-#     linter/src/rules/extern_task_undeclared.cpp
+
 #     linter/src/rules/extern_function_undeclared.cpp
-#     linter/src/rules/extern_constraint_undeclared.cpp
+#     linter/src/rules/extern_task_undeclared.cpp
 
 foreach(f ${LINTER_SRC})
   if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${f}")
