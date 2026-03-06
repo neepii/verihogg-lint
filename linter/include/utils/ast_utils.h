@@ -10,6 +10,8 @@
 
 using namespace SURELOG;
 
+const NodeId zeroId = NodeId(InvalidRawNodeId);
+
 NodeId findEnclosingModule(const FileContent* fC, NodeId node);
 
 bool isBuiltinClass(std::string className);

@@ -28,3 +28,5 @@
 #include "target_unpacked_array_concatenation.h"
 #include "type_casting.h"
 #include "extend_class.h"
+#include "duplicate_constructor.h"
+#include "duplicate_class.h"
