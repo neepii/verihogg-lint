@@ -63,10 +63,9 @@ set(LINTER_SRC
     linter/src/rules/duplicate_constructor.cpp
     linter/src/rules/duplicate_class.cpp
     linter/src/rules/extern_constraint_undeclared.cpp
+    linter/src/rules/extern_function_undeclared.cpp
+    linter/src/rules/extern_task_undeclared.cpp
 )
-#     linter/src/rules/extern_function_undeclared.cpp
-#     linter/src/rules/extern_task_undeclared.cpp
-
 
 foreach(f ${LINTER_SRC})
   if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${f}")
@@ -92,7 +91,7 @@ target_link_libraries(lint PUBLIC surelog)
 if(MSVC)
     target_compile_options(lint PRIVATE /W4 /bigobj)
 else()
-    target_compile_options(lint PRIVATE -Wall -O3 -Wextra -Wpedantic)
+    target_compile_options(lint PRIVATE -Wall -ggdb -O3 -Wextra -Wpedantic)
 endif()
 
 # Install rule

@@ -41,8 +41,8 @@ void runAllRules(const FileContent* fC, ErrorContainer* errors,
   checkDuplicateConstructor(fC, errors, symbols);
   checkDuplicateClass(fC, errors, symbols);
   checkExternConstraintUndeclared(fC, errors, symbols);
-  // checkExternFunctionUndeclared(fC, errors, symbols);
- // Analyzer::checkExternTaskUndeclared(fC, errors, symbols);
+  checkExternFunctionUndeclared(fC, errors, symbols);
+  // Analyzer::checkExternTaskUndeclared(fC, errors, symbols);
 }
 
 void runAllRulesOnDesign(Design* design, const vpiHandle& UHDMdesign,
