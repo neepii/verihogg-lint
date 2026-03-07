@@ -91,7 +91,7 @@ target_link_libraries(lint PUBLIC surelog)
 if(MSVC)
     target_compile_options(lint PRIVATE /W4 /bigobj)
 else()
-    target_compile_options(lint PRIVATE -Wall -ggdb -O3 -Wextra -Wpedantic)
+    target_compile_options(lint PRIVATE -Wall -O3 -Wextra -Wpedantic)
 endif()
 
 # Install rule
