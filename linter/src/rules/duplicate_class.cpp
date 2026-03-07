@@ -44,4 +44,3 @@ void checkDuplicateClass(const FileContent* fC, ErrorContainer* errors,
     }
   }
 }
-
