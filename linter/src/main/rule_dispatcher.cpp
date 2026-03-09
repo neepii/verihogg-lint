@@ -42,7 +42,8 @@ void runAllRules(const FileContent* fC, ErrorContainer* errors,
   checkDuplicateClass(fC, errors, symbols);
   checkExternConstraintUndeclared(fC, errors, symbols);
   checkExternFunctionUndeclared(fC, errors, symbols);
-  // Analyzer::checkExternTaskUndeclared(fC, errors, symbols);
+  checkExternTaskUndeclared(fC, errors, symbols);
+  checkExtendInterfaceClass(fC, errors, symbols);
 }
 
 void runAllRulesOnDesign(Design* design, const vpiHandle& UHDMdesign,

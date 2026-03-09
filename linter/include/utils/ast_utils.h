@@ -1,8 +1,8 @@
 #pragma once
 
+#include <cassert>
 #include <cstdint>
 #include <string>
-#include <cassert>
 
 #include "Surelog/Design/FileContent.h"
 #include "Surelog/ErrorReporting/ErrorContainer.h"
@@ -24,3 +24,5 @@ std::string getPrefix(const FileContent* fC, NodeId id);
 std::string getFullName(const FileContent* fC, NodeId id);
 
 std::unordered_map<std::string, NodeId> getClassIds(const FileContent* fC);
+
+std::string removeFilePrefix(std::string str);

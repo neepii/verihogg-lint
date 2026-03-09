@@ -21,6 +21,7 @@
 
 using namespace SURELOG;
 
+namespace {
 std::string getSuperclassString(const FileContent* fC, NodeId id) {
   assert(fC->Type(id) != VObjectType::paClass_declaration);
 
@@ -28,6 +29,7 @@ std::string getSuperclassString(const FileContent* fC, NodeId id) {
   if (classType == NodeId(InvalidRawNodeId)) return "";
   return getStringConst(fC, classType);
 }
+}  // namespace
 
 void checkExtendClass(const FileContent* fC, ErrorContainer* errors,
                       SymbolTable* symbols) {

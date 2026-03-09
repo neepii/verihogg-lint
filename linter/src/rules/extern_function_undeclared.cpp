@@ -32,8 +32,7 @@ void checkExternFunctionUndeclared(const FileContent* fC,
     const std::string declName = getStringConst(fC, funcBodyId);
     const std::string className = getPrefix(fC, funcBodyId);
 
-    if (isBuiltinClass(className)) continue;
-
+    if (isBuiltinClass(removeFilePrefix(className))) continue;
     if (classes.count(className) == 0) continue;
     const NodeId classId = classes.at(className);
 

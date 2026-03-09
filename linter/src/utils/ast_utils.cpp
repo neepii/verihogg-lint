@@ -1,8 +1,8 @@
 #include "utils/ast_utils.h"
 
 #include "Surelog/Common/FileSystem.h"
-#include "Surelog/Library/Library.h"
 #include "Surelog/ErrorReporting/ErrorContainer.h"
+#include "Surelog/Library/Library.h"
 
 using namespace SURELOG;
 
@@ -98,4 +98,10 @@ std::unordered_map<std::string, NodeId> getClassIds(const FileContent* fC) {
     classes[fullName] = classId;
   }
   return classes;
+}
+
+std::string removeFilePrefix(std::string str) {
+  size_t i = 0;
+  while (str[i++] != '@');
+  return std::string(str).substr(i, str.size());
 }
