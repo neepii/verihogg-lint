@@ -43,7 +43,6 @@ void checkExtendInterfaceClass(const FileContent* fC, ErrorContainer* errors,
                                SymbolTable* symbols) {
   if (!fC) return;
 
-  std::cout << fC->printSubTree(fC->getRootNode()) << std::endl;
   const NodeId rootNode = fC->getRootNode();
   const std::vector<NodeId> interfaceClassDeclarations =
       fC->sl_collect_all(rootNode, VObjectType::paInterface_class_declaration);

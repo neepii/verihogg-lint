@@ -6,6 +6,7 @@
 #include <rules/extern_constraint_undeclared.h>
 #include <rules/extern_function_undeclared.h>
 #include <rules/extern_task_undeclared.h>
+#include <rules/implement_class.h>
 #include <utils/init.h>
 
 #include <filesystem>
@@ -214,6 +215,22 @@ TEST(ExtendInterfaceClassTest, RaiseError) {
   testCheckWithErrorsExpected(tests_path,
                               ErrorDefinition::LINT_EXTEND_INTERFACE_CLASS,
                               ignoreList, checkExtendInterfaceClass);
+}
+
+TEST(ImplementClassTest, NoError) {
+  const fs::path tests_path{base_path / "ImplementClass" / "NoError"};
+
+  testCheckWithNoErrorsExpected(tests_path, checkImplementClass);
+}
+
+TEST(ImplementClassTest, RaiseError) {
+  const fs::path tests_path{base_path / "ImplementClass" / "RaiseError"};
+
+  std::set<ErrorDefinition::ErrorType> ignoreList{
+      ErrorDefinition::LINT_EXTERN_FUNCTION_UNDECLARED};
+
+  testCheckWithErrorsExpected(tests_path, ErrorDefinition::LINT_IMPLEMENT_CLASS,
+                              ignoreList, checkImplementClass);
 }
 
 int main(int argc, char** argv) {

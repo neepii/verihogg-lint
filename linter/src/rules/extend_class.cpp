@@ -26,7 +26,7 @@ std::string getSuperclassString(const FileContent* fC, NodeId id) {
   assert(fC->Type(id) != VObjectType::paClass_declaration);
 
   const NodeId classType = fC->sl_get(id, VObjectType::paClass_type);
-  if (classType == NodeId(InvalidRawNodeId)) return "";
+  if (classType == zeroId) return "";
   return getStringConst(fC, classType);
 }
 }  // namespace
