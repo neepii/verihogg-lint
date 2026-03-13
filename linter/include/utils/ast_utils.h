@@ -28,3 +28,7 @@ std::unordered_map<std::string, NodeId> getClassIds(const FileContent* fC);
 std::string removeFilePrefix(std::string str);
 
 std::string getClassScope(const FileContent* fC, NodeId funcBodyId);
+
+std::unordered_set<std::string> getInterfaceClassSet(const FileContent* fC);
+
+std::unordered_set<std::string> getClassSet(const FileContent* fC);

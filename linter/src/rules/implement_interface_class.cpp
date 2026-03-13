@@ -1,4 +1,4 @@
-#include "rules/implement_class.h"
+#include "rules/implement_interface_class.h"
 
 #include <cassert>
 #include <string>
@@ -22,23 +22,21 @@
 using namespace SURELOG;
 
 namespace {
-
-std::string getSuperclassString(const FileContent* fC, NodeId id) {
+std::string getSuperInterfaceString(const FileContent* fC, NodeId id) {
   NodeId classType = id;
   classType = fC->sl_get(classType, VObjectType::paInterface_class_type);
   classType = fC->sl_get(classType, VObjectType::paPs_identifier);
   if (classType == zeroId) return "";
   return getStringConst(fC, classType);
 }
-
 }  // namespace
 
-void checkImplementClass(const FileContent* fC, ErrorContainer* errors,
-                         SymbolTable* symbols) {
+void checkImplementInterfaceClass(const FileContent* fC, ErrorContainer* errors,
+                                  SymbolTable* symbols) {
   if (!fC) return;
 
-  std::unordered_set<std::string> interfaceClassSet = getInterfaceClassSet(fC);
   std::unordered_set<std::string> classSet = getClassSet(fC);
+  std::unordered_set<std::string> interfaceClassSet = getInterfaceClassSet(fC);
 
   const std::vector<NodeId> classDeclarations =
       fC->sl_collect_all(fC->getRootNode(), VObjectType::paClass_declaration);
@@ -47,14 +45,14 @@ void checkImplementClass(const FileContent* fC, ErrorContainer* errors,
     const NodeId implementsId = fC->sl_get(classId, VObjectType::paIMPLEMENTS);
     if (implementsId == zeroId) continue;
 
-    const std::string superclassName = getSuperclassString(fC, classId);
+    const std::string superInterfaceName = getSuperInterfaceString(fC, classId);
+    if (superInterfaceName == "") continue;
 
-    if (superclassName == "") continue;
-
-    if (classSet.count(superclassName) > 0) {
+    if (interfaceClassSet.count(superInterfaceName) == 0) {
       std::string className = getStringConst(fC, classId);
-      reportError(fC, classId, className, ErrorDefinition::LINT_IMPLEMENT_CLASS,
-                  errors, symbols);
+      reportError(fC, classId, className,
+                  ErrorDefinition::LINT_IMPLEMENT_INTERFACE_CLASS, errors,
+                  symbols);
     }
   }
 }

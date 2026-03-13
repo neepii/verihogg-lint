@@ -35,4 +35,4 @@
 #include "extern_task_undeclared.h"
 #include "extend_interface_class.h"
 #include "implement_class.h"
-/* #include "implement_interface_class.h" */
+#include "implement_interface_class.h"

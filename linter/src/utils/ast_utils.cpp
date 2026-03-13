@@ -113,3 +113,25 @@ std::string getClassScope(const FileContent* fC, NodeId funcBodyId) {
   if (classTypeId == zeroId) return "";
   return getStringConst(fC, classTypeId);
 }
+
+std::unordered_set<std::string> getInterfaceClassSet(const FileContent* fC) {
+  const std::vector<NodeId> interfaceClassDeclarations = fC->sl_collect_all(
+      fC->getRootNode(), VObjectType::paInterface_class_declaration);
+  std::unordered_set<std::string> interfaceClassSet;
+  for (auto& interfaceClass : interfaceClassDeclarations) {
+    std::string interfaceClassName = getStringConst(fC, interfaceClass);
+    interfaceClassSet.insert(interfaceClassName);
+  }
+  return interfaceClassSet;
+}
+
+std::unordered_set<std::string> getClassSet(const FileContent* fC) {
+  const std::vector<NodeId> classDeclarations =
+      fC->sl_collect_all(fC->getRootNode(), VObjectType::paClass_declaration);
+  std::unordered_set<std::string> classSet;
+  for (auto& classId : classDeclarations) {
+    std::string className = getStringConst(fC, classId);
+    classSet.insert(className);
+  }
+  return classSet;
+}

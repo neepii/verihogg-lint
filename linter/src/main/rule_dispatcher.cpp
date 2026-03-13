@@ -45,6 +45,7 @@ void runAllRules(const FileContent* fC, ErrorContainer* errors,
   checkExternTaskUndeclared(fC, errors, symbols);
   checkExtendInterfaceClass(fC, errors, symbols);
   checkImplementClass(fC, errors, symbols);
+  checkImplementInterfaceClass(fC, errors, symbols);
 }
 
 void runAllRulesOnDesign(Design* design, const vpiHandle& UHDMdesign,
