@@ -22,7 +22,6 @@ void checkExternFunctionUndeclared(const FileContent* fC,
                                    ErrorContainer* errors,
                                    SymbolTable* symbols) {
   if (!fC) return;
-
   const std::unordered_map<std::string, NodeId> classes = getClassIds(fC);
 
   const std::vector<NodeId> funcBodyDeclarations = fC->sl_collect_all(
@@ -30,9 +29,10 @@ void checkExternFunctionUndeclared(const FileContent* fC,
 
   for (auto& funcBodyId : funcBodyDeclarations) {
     const std::string declName = getStringConst(fC, funcBodyId);
-    const std::string className = getPrefix(fC, funcBodyId);
+    const std::string className = getClassScope(fC, funcBodyId);
 
-    if (isBuiltinClass(removeFilePrefix(className))) continue;
+    if (className == "") continue;
+    if (isBuiltinClass(className)) continue;
     if (classes.count(className) == 0) continue;
     const NodeId classId = classes.at(className);
 

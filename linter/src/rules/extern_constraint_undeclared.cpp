@@ -34,8 +34,7 @@ void checkExternConstraintUndeclared(const FileContent* fC,
     stringId = fC->sl_collect(stringId, VObjectType::slStringConst);
 
     const std::string constrName = getStringConst(fC, constrId);
-    const std::string className =
-        getPrefix(fC, constrId) + getStringConst(fC, stringId);
+    const std::string className = getStringConst(fC, stringId);
 
     assert(classes.find(className) != classes.end());
     const NodeId classId = classes.at(className);

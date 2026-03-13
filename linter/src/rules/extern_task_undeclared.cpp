@@ -29,9 +29,10 @@ void checkExternTaskUndeclared(const FileContent* fC, ErrorContainer* errors,
 
   for (auto& taskBodyId : taskBodyDeclarations) {
     const std::string declName = getStringConst(fC, taskBodyId);
-    const std::string className = getPrefix(fC, taskBodyId);
+    const std::string className = getClassScope(fC, taskBodyId);
 
-    if (isBuiltinClass(removeFilePrefix(className))) continue;
+    if (className == "") continue;
+    if (isBuiltinClass(className)) continue;
     if (classes.count(className) == 0) continue;
     const NodeId classId = classes.at(className);
 

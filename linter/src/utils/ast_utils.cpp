@@ -1,7 +1,5 @@
 #include "utils/ast_utils.h"
 
-#include "Surelog/Common/FileSystem.h"
-#include "Surelog/ErrorReporting/ErrorContainer.h"
 #include "Surelog/Library/Library.h"
 
 using namespace SURELOG;
@@ -88,14 +86,14 @@ std::string getFullName(const FileContent* fC, NodeId id) {
 }
 
 std::unordered_map<std::string, NodeId> getClassIds(const FileContent* fC) {
+  std::unordered_map<std::string, NodeId> classes;
   const std::vector<NodeId> classDeclarations =
       fC->sl_collect_all(fC->getRootNode(), VObjectType::paClass_declaration);
-  std::unordered_map<std::string, NodeId> classes;
 
   for (NodeId classId : classDeclarations) {
-    const std::string fullName = getFullName(fC, classId);
-    assert(classes.find(fullName) == classes.end());
-    classes[fullName] = classId;
+    const std::string className = getStringConst(fC, classId);
+    if (isBuiltinClass(className)) continue;
+    classes[className] = classId;
   }
   return classes;
 }
@@ -104,4 +102,14 @@ std::string removeFilePrefix(std::string str) {
   size_t i = 0;
   while (str[i++] != '@');
   return std::string(str).substr(i, str.size());
+}
+
+std::string getClassScope(const FileContent* fC, NodeId funcBodyId) {
+  const NodeId classScopeId =
+      fC->sl_collect(funcBodyId, VObjectType::paClass_scope);
+  if (classScopeId == zeroId) return "";
+  const NodeId classTypeId =
+      fC->sl_get(classScopeId, VObjectType::paClass_type);
+  if (classTypeId == zeroId) return "";
+  return getStringConst(fC, classTypeId);
 }
