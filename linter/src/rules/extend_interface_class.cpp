@@ -54,7 +54,7 @@ void checkExtendInterfaceClass(const FileContent* fC, ErrorContainer* errors,
   }
 
   for (auto& interfaceId : interfaceClassDeclarations) {
-    const std::string className = getStringConst(fC, interfaceId);
+    std::string className = getStringConst(fC, interfaceId);
     const std::string mainPrefix = getPrefix(fC, interfaceId);
     const std::vector<std::string> superclasses =
         getSuperclassStrings(fC, interfaceId);
@@ -62,12 +62,14 @@ void checkExtendInterfaceClass(const FileContent* fC, ErrorContainer* errors,
     for (auto& superclassName : superclasses) {
       if (isBuiltinClass(className) || superclassName == "") continue;
 
-      std::vector<NodeId> superIdVector = interfaceClassMap[superclassName];
+      const NodeId extendsId = fC->sl_get(interfaceId, VObjectType::paEXTENDS);
+      if (extendsId == zeroId) continue;
+
+      const std::vector<NodeId> superIdVector =
+          interfaceClassMap[superclassName];
       bool found = false;
       for (auto& superId : superIdVector) {
         const std::string superPrefix = getPrefix(fC, superId);
-        std::cerr << superPrefix << superclassName << " " << mainPrefix
-                  << className << std::endl;
 
         const size_t superSize = superPrefix.size();
         const size_t mainSize = superPrefix.size();
