@@ -1,5 +1,7 @@
 #include "utils/ast_utils.h"
 
+#include <iostream>
+
 #include "Surelog/Library/Library.h"
 
 using namespace SURELOG;
@@ -73,6 +75,10 @@ std::string getPrefix(const FileContent* fC, NodeId id) {
     result += contexts[i];
   }
 
+  if (contexts.size() > 0) {
+    result += "::";
+  }
+
   return libName + "@" + result;
 }
 
@@ -91,7 +97,7 @@ std::unordered_map<std::string, NodeId> getClassIds(const FileContent* fC) {
       fC->sl_collect_all(fC->getRootNode(), VObjectType::paClass_declaration);
 
   for (NodeId classId : classDeclarations) {
-    const std::string className = getStringConst(fC, classId);
+    const std::string className = getFullName(fC, classId);
     if (isBuiltinClass(className)) continue;
     classes[className] = classId;
   }
@@ -104,14 +110,25 @@ std::string removeFilePrefix(std::string str) {
   return std::string(str).substr(i, str.size());
 }
 
-std::string getClassScope(const FileContent* fC, NodeId funcBodyId) {
+std::vector<std::string> getClassScope(const FileContent* fC,
+                                       NodeId funcBodyId) {
+  std::cout << fC->printSubTree(funcBodyId) << std::endl;
+  std::vector<std::string> scopes;
   const NodeId classScopeId =
       fC->sl_collect(funcBodyId, VObjectType::paClass_scope);
-  if (classScopeId == zeroId) return "";
   const NodeId classTypeId =
       fC->sl_get(classScopeId, VObjectType::paClass_type);
-  if (classTypeId == zeroId) return "";
-  return getStringConst(fC, classTypeId);
+
+  if (classTypeId == zeroId) return scopes;
+  const std::vector<NodeId> ids =
+      fC->sl_collect_all(funcBodyId, VObjectType::slStringConst);
+
+  for (auto& id : ids) {
+    std::string str{fC->SymName(id)};
+    scopes.push_back(str);
+  }
+
+  return scopes;
 }
 
 std::unordered_set<std::string> getInterfaceClassSet(const FileContent* fC) {
