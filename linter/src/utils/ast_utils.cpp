@@ -1,6 +1,7 @@
 #include "utils/ast_utils.h"
 
 #include <iostream>
+#include <sstream>
 
 #include "Surelog/Library/Library.h"
 
@@ -151,4 +152,25 @@ std::unordered_set<std::string> getClassSet(const FileContent* fC) {
     classSet.insert(className);
   }
   return classSet;
+}
+
+std::string getFullNameFromScope(const FileContent* fC, NodeId id) {
+  std::stringstream sstream;
+  std::string prefix = getPrefix(fC, id);
+  sstream << prefix;
+
+  const NodeId tempId = fC->sl_get(id, VObjectType::paClass_type);
+  const std::vector<NodeId> strIds =
+      fC->sl_collect_all(tempId, VObjectType::slStringConst);
+  assert(strIds.size() > 0);
+
+  std::string firstString{fC->SymName(strIds[0])};
+  sstream << firstString;
+
+  for (size_t i = 1; i < strIds.size(); i++) {
+    const NodeId stringId = strIds[i];
+    std::string scopeName{fC->SymName(stringId)};
+    sstream << "::" << scopeName;
+  }
+  return sstream.str();
 }
