@@ -22,8 +22,6 @@ set(GTEST_INCLUDE_DIRS
     external/Surelog/third_party/googletest/googletest/include
     external/Surelog/third_party/googletest/googlemock/include)
 
-add_subdirectory(linter)
-
 set(LINTER_SRC
     linter/src/main/lint.cpp
     linter/src/utils/ast_utils.cpp
@@ -82,7 +80,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-add_executable(lint ${LINTER_SRC})
+add_library(lint ${LINTER_SRC})
 
 target_include_directories(lint
   PUBLIC
@@ -92,10 +90,20 @@ target_include_directories(lint
 
 target_link_libraries(lint PUBLIC surelog)
 
+add_executable(lint_exec ${LINTER_SRC})
+
+target_include_directories(lint_exec
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/linter/include>
+)
+
+target_link_libraries(lint_exec PUBLIC surelog)
+
 if(MSVC)
-    target_compile_options(lint PRIVATE /W4 /bigobj)
+    target_compile_options(lint_exec PRIVATE /W4 /bigobj)
 else()
-    target_compile_options(lint PRIVATE -Wall -O3 -Wextra -Wpedantic)
+    target_compile_options(lint_exec PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 # Install rule
