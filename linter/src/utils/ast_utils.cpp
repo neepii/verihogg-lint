@@ -23,6 +23,7 @@ bool isBuiltinClass(std::string className) {
 
 std::string getStringConst(const FileContent* fC, NodeId id) {
   NodeId stringId = fC->sl_get(id, VObjectType::slStringConst);
+  if (stringId == zeroId) return "";
   std::string str{fC->SymName(stringId)};
   return str;
 }
@@ -173,4 +174,12 @@ std::string getFullNameFromScope(const FileContent* fC, NodeId id) {
     sstream << "::" << scopeName;
   }
   return sstream.str();
+}
+
+std::string getSuperclassString(const FileContent* fC, NodeId id) {
+  assert(fC->Type(id) != VObjectType::paClass_declaration);
+
+  const NodeId classType = fC->sl_get(id, VObjectType::paClass_type);
+  if (classType == zeroId) return "";
+  return getStringConst(fC, classType);
 }

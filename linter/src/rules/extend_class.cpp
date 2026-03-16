@@ -5,31 +5,12 @@
 #include <string_view>
 #include <vector>
 
-#include "Surelog/CommandLine/CommandLineParser.h"
-#include "Surelog/Design/Design.h"
-#include "Surelog/Design/FileContent.h"
-#include "Surelog/Design/ModuleDefinition.h"
-#include "Surelog/Design/ModuleInstance.h"
-#include "Surelog/ErrorReporting/ErrorContainer.h"
-#include "Surelog/Library/Library.h"
-#include "Surelog/SourceCompile/CompileSourceFile.h"
-#include "Surelog/SourceCompile/Compiler.h"
-#include "Surelog/SourceCompile/ParseFile.h"
-#include "Surelog/Testbench/ClassDefinition.h"
 #include "utils/ast_utils.h"
 #include "utils/location_utils.h"
 
 using namespace SURELOG;
 
-namespace {
-std::string getSuperclassString(const FileContent* fC, NodeId id) {
-  assert(fC->Type(id) != VObjectType::paClass_declaration);
-
-  const NodeId classType = fC->sl_get(id, VObjectType::paClass_type);
-  if (classType == zeroId) return "";
-  return getStringConst(fC, classType);
-}
-}  // namespace
+namespace {}  // namespace
 
 void checkExtendClass(const FileContent* fC, ErrorContainer* errors,
                       SymbolTable* symbols) {
@@ -58,7 +39,6 @@ void checkExtendClass(const FileContent* fC, ErrorContainer* errors,
     bool found = false;
     for (auto& superId : superIdVector) {
       const std::string superPrefix = getPrefix(fC, superId);
-      const std::string_view view = mainPrefix;
 
       const size_t superSize = superPrefix.size();
       const size_t mainSize = superPrefix.size();

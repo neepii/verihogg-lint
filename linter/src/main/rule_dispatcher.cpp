@@ -46,6 +46,7 @@ void runAllRules(const FileContent* fC, ErrorContainer* errors,
   checkExtendInterfaceClass(fC, errors, symbols);
   checkImplementClass(fC, errors, symbols);
   checkImplementInterfaceClass(fC, errors, symbols);
+  checkCircularInheritance(fC, errors, symbols);
 }
 
 void runAllRulesOnDesign(Design* design, const vpiHandle& UHDMdesign,

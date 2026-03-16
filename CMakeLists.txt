@@ -68,6 +68,7 @@ set(LINTER_SRC
     linter/src/rules/extend_interface_class.cpp
     linter/src/rules/implement_class.cpp
     linter/src/rules/implement_interface_class.cpp
+    linter/src/rules/circular_inheritance.cpp
 )
 
 foreach(f ${LINTER_SRC})

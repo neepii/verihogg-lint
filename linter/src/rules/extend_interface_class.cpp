@@ -5,25 +5,14 @@
 #include <string_view>
 #include <vector>
 
-#include "Surelog/CommandLine/CommandLineParser.h"
-#include "Surelog/Design/Design.h"
-#include "Surelog/Design/FileContent.h"
-#include "Surelog/Design/ModuleDefinition.h"
-#include "Surelog/Design/ModuleInstance.h"
-#include "Surelog/ErrorReporting/ErrorContainer.h"
-#include "Surelog/Library/Library.h"
-#include "Surelog/SourceCompile/CompileSourceFile.h"
-#include "Surelog/SourceCompile/Compiler.h"
-#include "Surelog/SourceCompile/ParseFile.h"
-#include "Surelog/Testbench/ClassDefinition.h"
 #include "utils/ast_utils.h"
 #include "utils/location_utils.h"
 
 using namespace SURELOG;
 
 namespace {
-std::vector<std::string> getSuperclassStrings(const FileContent* fC,
-                                              NodeId id) {
+std::vector<std::string> getSuperclassStringsFromInterfaceClasses(
+    const FileContent* fC, NodeId id) {
   assert(fC->Type(id) != VObjectType::paClass_declaration);
 
   std::vector<std::string> result;
@@ -57,7 +46,7 @@ void checkExtendInterfaceClass(const FileContent* fC, ErrorContainer* errors,
     std::string className = getStringConst(fC, interfaceId);
     const std::string mainPrefix = getPrefix(fC, interfaceId);
     const std::vector<std::string> superclasses =
-        getSuperclassStrings(fC, interfaceId);
+        getSuperclassStringsFromInterfaceClasses(fC, interfaceId);
 
     for (auto& superclassName : superclasses) {
       if (isBuiltinClass(className) || superclassName == "") continue;
