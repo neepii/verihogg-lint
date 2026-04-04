@@ -141,7 +141,9 @@ auto ParseArgs(int argc, const char** argv) -> Options {
 
   const std::filesystem::path configPath = DefaultConfigFileName;
   const std::filesystem::path currentDir = std::filesystem::current_path();
-  opts.config_file = currentDir / configPath;
+  if (std::filesystem::exists(currentDir / configPath)) {
+    opts.config_file = currentDir / configPath;
+  }
 
   for (int i = 1; i < argc; ++i) {
     const char* arg = argv[i];
