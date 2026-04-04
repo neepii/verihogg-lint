@@ -97,7 +97,8 @@ auto main(int argc, const char** argv) -> int {
     return 1;
   }
 
-  RunAllRulesOnDesign(theDesign, uhdmDesign, errors.get(), symbolTable.get());
+  RunAllRulesOnDesign(theDesign, uhdmDesign, errors.get(), symbolTable.get(),
+                      kOpts.config_file);
 
   errors->printMessages(clp->muteStdout());
 

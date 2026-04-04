@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <vector>
 
 namespace cli {
@@ -13,6 +14,7 @@ struct Options {
   bool show_rules = false;
   bool show_surelog_help = false;
 
+  std::filesystem::path config_file;
   std::vector<const char*> surelog_args;
 };
 

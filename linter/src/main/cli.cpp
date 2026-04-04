@@ -2,7 +2,11 @@
 
 #include <array>
 #include <cstring>
+#include <filesystem>
 #include <iostream>
+#include <string>
+
+#include "main/rule_dispatcher.h"
 
 namespace cli {
 
@@ -10,6 +14,8 @@ struct RuleInfo {
   const char* id;
   const char* description;
 };
+
+constexpr size_t CONFIG_FILE_ARG_LEN = 13;
 
 static constexpr std::array kRules = std::to_array<RuleInfo>({
     {.id = "FATAL_SYSTEM_TASK_FIRST_ARGUMENT",
@@ -133,6 +139,10 @@ auto ParseArgs(int argc, const char** argv) -> Options {
 
   opts.surelog_args.push_back(argv[0]);
 
+  const std::filesystem::path configPath = DefaultConfigFileName;
+  const std::filesystem::path currentDir = std::filesystem::current_path();
+  opts.config_file = currentDir / configPath;
+
   for (int i = 1; i < argc; ++i) {
     const char* arg = argv[i];
 
@@ -147,6 +157,11 @@ auto ParseArgs(int argc, const char** argv) -> Options {
       opts.show_rules = true;
     } else if (std::strcmp(arg, "--surelog-help") == 0) {
       opts.show_surelog_help = true;
+    } else if (std::strncmp(arg, "--config-file", CONFIG_FILE_ARG_LEN) == 0) {
+      const std::string strArg{arg};
+      const std::string config_file =
+          strArg.substr(CONFIG_FILE_ARG_LEN + 1, strArg.size());
+      opts.config_file = std::filesystem::path{config_file};
     } else {
       opts.surelog_args.push_back(arg);
     }
