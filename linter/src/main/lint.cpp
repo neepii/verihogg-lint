@@ -20,6 +20,11 @@ namespace SL = SURELOG;
 auto main(int argc, const char** argv) -> int {
   const cli::Options kOpts = cli::ParseArgs(argc, argv);
 
+  if (kOpts.dump_config) {
+    DumpConfig();
+    return 0;
+  }
+
   if (kOpts.show_version) {
     cli::PrintVersion();
     return 0;

@@ -136,7 +136,10 @@ auto ParseArgs(int argc, const char** argv) -> Options {
   for (int i = 1; i < argc; ++i) {
     const char* arg = argv[i];
 
-    if (std::strcmp(arg, "--help") == 0 || std::strcmp(arg, "-h") == 0) {
+    if (std::strcmp(arg, "--dump-config") == 0) {
+      opts.dump_config = true;
+      return opts;
+    } else if (std::strcmp(arg, "--help") == 0 || std::strcmp(arg, "-h") == 0) {
       opts.show_help = true;
     } else if (std::strcmp(arg, "--version") == 0) {
       opts.show_version = true;
