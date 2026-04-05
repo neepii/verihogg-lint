@@ -72,6 +72,7 @@ enum LintIdEnum : uint16_t {
   LINT_LOGICAL_NEGATION,
   LINT_INCOMPLETE_ASSIGNMENT_PATTERN,
   LINT_ASSIGNMENT_PATTERN_VALUES,
+  LINT_INVALID_LIBLIST,
 };
 // NOLINTEND(cppcoreguidelines-use-enum-class)
 
@@ -266,6 +267,8 @@ inline constexpr std::array kLintRules = {
     LintRuleInfo{.type = LINT_INCOMPLETE_ASSIGNMENT_PATTERN,
                  .text = "Incomplete named assignment pattern: %s"},
     LintRuleInfo{.type = LINT_ASSIGNMENT_PATTERN_VALUES, .text = "%s"},
+    LintRuleInfo{.type = LINT_INVALID_LIBLIST,
+                 .text = "Liblist is empty for %s"},
 };
 
 inline void RegisterLintRules() {
