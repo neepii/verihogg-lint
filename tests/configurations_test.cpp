@@ -4,6 +4,7 @@
 
 #include "main/lint_rules.h"
 #include "rules/invalid_liblist.h"
+#include "rules/undeclared_cell.h"
 #include "utils.h"
 
 namespace fs = std::filesystem;
@@ -28,6 +29,24 @@ TEST(InvalidLiblistTest, RaiseError) {
   test::CheckWithErrorsExpected(tests_path, verihogg_lint::LINT_INVALID_LIBLIST,
                                 ignoreList, CheckInvalidLiblist);
 }
+
+TEST(UndeclaredCellTest, NoError) {
+  const fs::path tests_path{BasePath() / "UndeclaredCell" / "NoError"};
+
+  global::CheckWithNoErrorsExpected(tests_path, CheckUndeclaredCell);
+}
+
+TEST(UndeclaredCellTest, RaiseError) {
+  const fs::path tests_path{BasePath() / "UndeclaredCell" / "RaiseError"};
+
+  std::unordered_set<SURELOG::ErrorDefinition::ErrorType> ignoreList{
+      SURELOG::ErrorDefinition::COMP_UNDEFINED_BASE_CLASS};
+
+  global::CheckWithErrorsExpected(tests_path,
+                                  verihogg_lint::LINT_UNDECLARED_CELL,
+                                  ignoreList, CheckUndeclaredCell);
+}
+
 }  // namespace
 auto main(int argc, char** argv) -> int {
   ::testing::InitGoogleTest(&argc, argv);

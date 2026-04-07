@@ -29,3 +29,18 @@ void CheckWithNoErrorsExpected(
     const std::function<void(const SL::FileContent*, SL::ErrorContainer*,
                              SL::SymbolTable*)>& check_func);
 }  // namespace test
+
+namespace global {
+
+void CheckWithErrorsExpected(
+    const fs::path& tests_path,
+    SURELOG::ErrorDefinition::ErrorType errorIdExpected,
+    const std::unordered_set<SURELOG::ErrorDefinition::ErrorType>& ignoreList,
+    const std::function<void(SL::Design*, SL::ErrorContainer*,
+                             SL::SymbolTable*)>& check_func);
+
+void CheckWithNoErrorsExpected(
+    const fs::path& tests_path,
+    const std::function<void(SL::Design*, SL::ErrorContainer*,
+                             SL::SymbolTable*)>& check_func);
+}  // namespace global
