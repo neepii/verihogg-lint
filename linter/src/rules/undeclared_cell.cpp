@@ -79,7 +79,7 @@ auto ExtractDesignInfo(const SL::FileContent* fileContent,
     return info;
   }
 
-  if (identifiers.size() == 1) {  // Ugly ass
+  if (identifiers.size() == 1) {
     info.moduleName = identifiers[0];
     info.libName = "";
     info.scopeName = info.moduleName;
@@ -227,52 +227,41 @@ auto CollectAllModules(SL::Design* design)
           moduleMap[kFullName] = info;
         }
 
-        // for (SL::NodeId const kInterfaceDecl : fileCont->sl_collect_all(
-        //          kRoot, SL::VObjectType::paInterface_declaration)) {
-        //   SL::NodeId kHeader = fileCont->Child(kInterfaceDecl);
-        //   if (!kHeader ||
-        //       fileCont->Type(kHeader) !=
-        //       SL::VObjectType::paInterface_ansi_header) {
-        //     continue;
-        //   }
+        for (SL::NodeId const kInterfaceDecl : fileContent->sl_collect_all(
+                 kRoot, SL::VObjectType::paInterface_declaration)) {
+          SL::NodeId kHeader = fileContent->Child(kInterfaceDecl);
+          if (!kHeader || fileContent->Type(kHeader) !=
+                              SL::VObjectType::paInterface_ansi_header) {
+            continue;
+          }
 
-        //   std::string_view const kInterfaceName =
-        //       GetScopeName(fileCont, kInterfaceDecl);
-        //   std::string const kPrefix = GetPrefix(fileCont, kInterfaceDecl);
+          std::string const kPrefix = GetPrefix(fileContent, kHeader);
+          std::string const kFullName = kPrefix.substr(0, kPrefix.size() - 2);
 
-        //   std::string kTempString;
-        //   if (!kPrefix.empty()) {
-        //     kTempString = kPrefix + std::string(kInterfaceName);
-        //   } else {
-        //     kTempString = std::string(kInterfaceName);
-        //   }
+          ModuleInfo info{.fullName = kFullName,
+                          .nodeId = kInterfaceDecl,
+                          .fileContent = fileContent};
 
-        //   std::string_view kFullName = kTempString;
+          moduleMap[kFullName] = info;
+        }
 
-        //   ModuleInfo info{.fullName = kFullName,
-        //                   .nodeId = kInterfaceDecl,
-        //                   .fileContent = fileCont};
+        for (SL::NodeId const kPackageDecl : fileContent->sl_collect_all(
+                 kRoot, SL::VObjectType::paPackage_declaration)) {
+          SL::NodeId kNameNode =
+              fileContent->sl_get(kPackageDecl, SL::VObjectType::slStringConst);
+          if (!kNameNode) {
+            continue;
+          }
 
-        //   moduleMap[kFullName] = info;
-        // }
+          std::string_view const kShortName = fileContent->SymName(kNameNode);
 
-        // for (SL::NodeId const kPackageDecl : fileCont->sl_collect_all(
-        //          kRoot, SL::VObjectType::paPackage_declaration)) {
-        //   SL::NodeId kNameNode =
-        //       fileCont->sl_get(kPackageDecl, SL::VObjectType::slStringConst);
-        //   if (!kNameNode) {
-        //     continue;
-        //   }
+          ModuleInfo info{.fullName = kShortName,
 
-        //   std::string_view const kShortName = fileCont->SymName(kNameNode);
+                          .nodeId = kPackageDecl,
+                          .fileContent = fileContent};
 
-        //   ModuleInfo info{.fullName = kShortName,
-
-        //                   .nodeId = kPackageDecl,
-        //                   .fileContent = fileCont};
-
-        //   moduleMap[kShortName] = info;
-        // }
+          moduleMap[kShortName] = info;
+        }
       });
   return moduleMap;
 }
