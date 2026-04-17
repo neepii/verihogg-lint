@@ -2,6 +2,8 @@
 
 #include <filesystem>
 #include <gsl/span>
+#include <string_view>
+#include <unordered_set>
 #include <vector>
 
 namespace cli {
@@ -20,6 +22,7 @@ struct Options {
 };
 
 auto ParseArgs(gsl::span<const char*> args) -> Options;
+void DumpConfig();
 
 void PrintHelp(const char* programName);
 void PrintVersion();

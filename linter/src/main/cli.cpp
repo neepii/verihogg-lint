@@ -1,17 +1,10 @@
 #include "main/cli.h"
 
-#include <yaml-cpp/node/convert.h>      // NOLINT(misc-include-cleaner)
-#include <yaml-cpp/node/detail/impl.h>  // NOLINT(misc-include-cleaner)
-#include <yaml-cpp/node/emit.h>
-#include <yaml-cpp/node/node.h>
-#include <yaml-cpp/node/parse.h>
-#include <yaml-cpp/null.h>
-#include <yaml-cpp/parser.h>
-
 #include <cstring>
 #include <filesystem>
 #include <gsl/span>
 #include <iostream>
+#include <string_view>
 
 #include "main/rule_dispatcher.h"
 
@@ -39,13 +32,12 @@ auto ParseArgs(const gsl::span<const char*> args) -> Options {
       opts.show_rules = true;
     } else if (std::strcmp(arg, "--surelog-help") == 0) {
       opts.show_surelog_help = true;
-    }  // else if (std::strncmp(arg, "--config-file", CONFIG_FLAG_LEN) == 0) {
-    //   const std::string strArg{arg};
-    //   const std::string config_file =
-    //       strArg.substr(CONFIG_FLAG_LEN + 1, strArg.size());
-    //   opts.config_file = std::filesystem::path{config_file};
-    // }
-    else {
+    } else if (std::strncmp(arg, "--config-file", CONFIG_FLAG_LEN) == 0) {
+      const std::string strArg{arg};
+      const std::string config_file =
+          strArg.substr(CONFIG_FLAG_LEN + 1, strArg.size());
+      opts.config_file = std::filesystem::path{config_file};
+    } else {
       opts.surelog_args.push_back(arg);
     }
   }
@@ -53,73 +45,13 @@ auto ParseArgs(const gsl::span<const char*> args) -> Options {
   return opts;
 }
 
-// auto GetYamlConfig(const std::filesystem::path& configFile) -> YAML::Node {
-//   if (!configFile.empty() && std::filesystem::exists(configFile)) {
-//     try {
-//       return YAML::LoadFile(configFile);
-//     } catch (const std::exception& e) {
-//       std::cerr << "Bad config file" << "\n";
-//       return YAML::Node{};
-//     }
-//   }
-
-//   const std::filesystem::path configPath = DefaultConfigFileName;
-//   std::filesystem::path currentDir = std::filesystem::current_path();
-
-//   while (!std::filesystem::exists(currentDir / configPath)) {
-//     if (currentDir.parent_path() == currentDir) {
-//       std::cerr << "No config file" << "\n";
-//       return YAML::Node{};
-//     }
-//     currentDir = currentDir.parent_path();
-//   }
-
-//   try {
-//     return YAML::LoadFile(currentDir / configPath);
-//   } catch (const std::exception& e) {
-//     std::cerr << "Bad config file" << "\n";
-//     return YAML::Node{};
-//   }
-// }
-
-// template <typename RuleType>
-// void FilterSpecificRule(RuleType& rule, const YAML::Node& tree) {
-//   const YAML::Node node = tree[rule.idName];
-//   if (node) {
-//     const auto value = node.as<std::string>();
-
-//     if (value == "yes" || value == "true") {
-//       rule.enabled = true;
-//     } else if (value == "false" || value == "no") {
-//       rule.enabled = false;
-//     } else {
-//       std::cerr << "Expected boolean, got: "
-//                 << std::string(value.begin(), value.end()) << "\n";
-//     }
-//   }
-// }
-
-// void FilterRules(const std::filesystem::path& configFile) {
-//   const auto yaml = GetYamlConfig(configFile);
-//   if (yaml.IsNull()) {
-//     return;
-//   }
-
-//   for (auto& rule : RuleInfo::allRules) {
-//     FilterSpecificRule(rule, yaml);
-//   }
-//   for (auto& rule : RuleInfo::globalRules) {
-//     FilterSpecificRule(rule, yaml);
-//   }
-// }
-
 void DumpConfig() {
   std::cout << "Checks:\n";
   for (auto& rule : RuleInfo::allRules) {
-    std::cout << "  " << rule.idName << "\n";
+    std::cout << "  - " << rule.idName << "\n";
   }
   for (auto& rule : RuleInfo::globalRules) {
-    std::cout << "  " << rule.idName << "\n";
+    std::cout << "  - " << rule.idName << "\n";
   }
 }
 
