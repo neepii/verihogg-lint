@@ -6,6 +6,7 @@
 #include "rules/invalid_liblist.h"
 #include "rules/undeclared_cell.h"
 #include "rules/undeclared_design.h"
+#include "rules/undeclared_library.h"
 #include "utils.h"
 
 namespace fs = std::filesystem;
@@ -65,8 +66,8 @@ TEST(UndeclaredDesignTest, RaiseError) {
                                   verihogg_lint::LINT_UNDECLARED_DESIGN,
                                   ignoreList, CheckUndeclaredDesign);
 }
-
 }  // namespace
+
 auto main(int argc, char** argv) -> int {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

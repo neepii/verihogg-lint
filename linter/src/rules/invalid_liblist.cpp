@@ -6,6 +6,8 @@
 #include <Surelog/SourceCompile/SymbolTable.h>
 #include <Surelog/SourceCompile/VObjectTypes.h>
 
+#include <string>
+
 #include "main/lint_rules.h"
 #include "utils/ast_utils.h"
 #include "utils/location_utils.h"

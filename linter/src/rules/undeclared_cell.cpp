@@ -7,8 +7,10 @@
 #include <Surelog/SourceCompile/SymbolTable.h>
 #include <Surelog/SourceCompile/VObjectTypes.h>
 
+#include <string>
 #include <string_view>
 #include <unordered_map>
+#include <vector>
 
 #include "main/lint_rules.h"
 #include "utils/design_utils.h"
@@ -31,7 +33,7 @@ auto FindScopeContainer(const SL::FileContent* fileContent, SL::NodeId node)
     -> SL::NodeId {
   SL::NodeId current = fileContent->Parent(node);
   while (current) {
-    SL::VObjectType type = fileContent->Type(current);
+    const SL::VObjectType type = fileContent->Type(current);
     if (type == SL::VObjectType::paModule_declaration ||
         type == SL::VObjectType::paInterface_declaration ||
         type == SL::VObjectType::paPackage_declaration ||
@@ -45,7 +47,7 @@ auto FindScopeContainer(const SL::FileContent* fileContent, SL::NodeId node)
 
 auto ExtractCellNameFromClause(const SL::FileContent* fileContent,
                                SL::NodeId cellClause) -> std::string_view {
-  SL::NodeId nameNode =
+  const SL::NodeId nameNode =
       fileContent->sl_get(cellClause, SL::VObjectType::slStringConst);
   if (nameNode) {
     return fileContent->SymName(nameNode);
@@ -67,7 +69,7 @@ auto ExtractLiblistFromClause(const SL::FileContent* fileContent,
     current = fileContent->Sibling(current);
   }
 
-  SL::NodeId firstLib =
+  const SL::NodeId firstLib =
       fileContent->sl_get(liblistClause, SL::VObjectType::slStringConst);
   if (firstLib) {
     return fileContent->SymName(firstLib);
@@ -79,7 +81,7 @@ auto CollectAllCellInfos(SL::Design* design) -> std::vector<CellInfo> {
   std::vector<CellInfo> allCells;
 
   DesignUtils::ForEachFileContent(design, [&](const SL::FileContent* fileCont) {
-    SL::NodeId const kRoot = fileCont->getRootNode();
+    const SL::NodeId kRoot = fileCont->getRootNode();
     if (!kRoot) {
       return;
     }
@@ -88,26 +90,26 @@ auto CollectAllCellInfos(SL::Design* design) -> std::vector<CellInfo> {
              kRoot, SL::VObjectType::paConfig_declaration)) {
       for (SL::NodeId const kConfigStatement : fileCont->sl_collect_all(
                kConfigDecl, SL::VObjectType::paConfig_rule_statement)) {
-        DesignInfo kDesignInfo =
+        const DesignInfo kDesignInfo =
             DesignUtils::ExtractDesignInfo(fileCont, kConfigDecl);
 
         SL::NodeId kCellClause = fileCont->Child(kConfigStatement);
         while (kCellClause) {
           if (fileCont->Type(kCellClause) == SL::VObjectType::paCell_clause) {
-            SL::NodeId kLiblistClause = fileCont->Sibling(kCellClause);
+            const SL::NodeId kLiblistClause = fileCont->Sibling(kCellClause);
             if (kLiblistClause && fileCont->Type(kLiblistClause) ==
                                       SL::VObjectType::paLiblist_clause) {
-              std::string_view cellName =
+              const std::string_view cellName =
                   ExtractCellNameFromClause(fileCont, kCellClause);
-              std::string_view liblist =
+              const std::string_view liblist =
                   ExtractLiblistFromClause(fileCont, kLiblistClause);
 
               if (!cellName.empty()) {
-                CellInfo info{.configNode = kConfigDecl,
-                              .cellName = cellName,
-                              .liblist = liblist,
-                              .designInfo = kDesignInfo,
-                              .fileContent = fileCont};
+                const CellInfo info{.configNode = kConfigDecl,
+                                    .cellName = cellName,
+                                    .liblist = liblist,
+                                    .designInfo = kDesignInfo,
+                                    .fileContent = fileCont};
                 allCells.push_back(info);
               }
             }
@@ -129,14 +131,14 @@ auto CellIsInModule(
     return false;
   }
 
-  auto& moduleInfo = moduleMap.at(moduleName);
-  std::vector<SL::NodeId> const kAllInsts = fileContent->sl_collect_all(
+  const auto& moduleInfo = moduleMap.at(moduleName);
+  const std::vector<SL::NodeId> kAllInsts = fileContent->sl_collect_all(
       moduleInfo.nodeId, SL::VObjectType::paModule_instantiation);
 
   for (auto& instId : kAllInsts) {
-    SL::NodeId const nameId =
+    const SL::NodeId nameId =
         fileContent->sl_get(instId, SL::VObjectType::slStringConst);
-    std::string_view const kInstName = fileContent->SymName(nameId);
+    const std::string_view kInstName = fileContent->SymName(nameId);
 
     if (kInstName == cellName) {
       return true;
@@ -153,18 +155,19 @@ void CheckUndeclaredCell(SL::Design* design, SL::ErrorContainer* errors,
     return;
   }
 
-  auto globalModuleMap = ModuleUtils::CollectAllModules(design);
+  const auto globalModuleMap = ModuleUtils::CollectAllModules(design);
   if (globalModuleMap.empty()) {
     return;
   }
 
   for (const auto& cellInfo : CollectAllCellInfos(design)) {
-    std::string const kFullScopeName =
+    const std::string kFullScopeName =
         cellInfo.designInfo.libName + "@" + cellInfo.designInfo.scopeName;
-    std::string const kFullModuleName =
+    const std::string kFullModuleName =
         cellInfo.designInfo.libName + "@" + std::string(cellInfo.cellName);
-    bool CellExists = CellIsInModule(cellInfo.cellName, globalModuleMap,
-                                     kFullScopeName, cellInfo.fileContent);
+    const bool CellExists =
+        CellIsInModule(cellInfo.cellName, globalModuleMap, kFullScopeName,
+                       cellInfo.fileContent);
     if (CellExists &&
         globalModuleMap.find(kFullModuleName) != globalModuleMap.end()) {
       continue;

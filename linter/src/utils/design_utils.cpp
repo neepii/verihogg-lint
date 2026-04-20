@@ -1,6 +1,12 @@
 #include "utils/design_utils.h"
 
+#include <Surelog/Common/NodeId.h>
+#include <Surelog/SourceCompile/VObjectTypes.h>
+
+#include <cstddef>
 #include <functional>
+#include <string_view>
+#include <vector>
 
 #include "Surelog/Design/Design.h"
 #include "Surelog/Design/FileContent.h"
@@ -27,7 +33,7 @@ auto ExtractDesignInfo(const SL::FileContent* fileContent,
                        SL::NodeId configDecl) -> DesignInfo {
   DesignInfo info;
 
-  SL::NodeId designStmt =
+  const SL::NodeId designStmt =
       fileContent->sl_get(configDecl, SL::VObjectType::paDesign_statement);
   if (!designStmt) {
     return info;
