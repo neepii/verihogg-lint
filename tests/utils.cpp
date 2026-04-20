@@ -1,15 +1,19 @@
+#include <Surelog/Library/Library.h>
 #include <gtest/gtest.h>
 
 #include <filesystem>
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include "Surelog/API/Surelog.h"
 #include "Surelog/CommandLine/CommandLineParser.h"
 #include "Surelog/Design/Design.h"
 #include "Surelog/Design/FileContent.h"
 #include "Surelog/ErrorReporting/ErrorContainer.h"
+#include "Surelog/Library/Library.h"
+#include "Surelog/Library/LibrarySet.h"
 #include "Surelog/SourceCompile/SymbolTable.h"
 #include "utils/init.h"
 
@@ -26,14 +30,31 @@ auto GetDesignFromPath(const fs::path& path, SL::ErrorContainer* errors,
   InitCommandLineParser(clp.get());
 
   const std::string path_str = path.string();
-  std::array<const char*, 2> argv = {"", path_str.c_str()};
-  if (!clp->parseCommandLine(2, argv.data())) {
+  const std::string lib1Path =
+      path_str + "/../../../../../tests/commonlibs/lib1.sv";
+  const std::string lib2Path =
+      path_str + "/../../../../../tests/commonlibs/lib2.sv";
+  const std::string lib3Path =
+      path_str + "/../../../../../tests/commonlibs/lib3.sv";
+  const size_t argc = 10;
+  std::array<const char*, argc> argv = {"",
+                                        "-v",
+                                        lib1Path.c_str(),
+                                        "-L",
+                                        "lib1",
+                                        "-v",
+                                        lib2Path.c_str(),
+                                        "-v",
+                                        lib3Path.c_str(),
+                                        path_str.c_str()};
+  if (!clp->parseCommandLine(argc, argv.data())) {
     std::cerr << "Can't parse command line" << '\n';
   }
 
   try {
     const auto compiler = start_compiler(clp.get());
-    return get_design(compiler);
+    const auto design = get_design(compiler);
+    return design;
   } catch (const std::exception& e) {
     std::cerr << "Compiler error: " << e.what() << '\n';
     return nullptr;
@@ -142,6 +163,9 @@ void CheckWithErrorsExpected(
 
     SL::Design* design =
         GetDesignFromPath(file_path, errors.get(), symbols.get());
+    const auto libs = design->getLibrarySet()->getLibraries();
+    std::cout << "libs size: " << libs.size() << "\n";
+
     check_func(design, errors.get(), symbols.get());
     errors->printMessages();
 

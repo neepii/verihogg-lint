@@ -140,6 +140,7 @@ set(LINTER_SRC
     linter/src/utils/name_utils.cpp
     linter/src/utils/string_utils.cpp
     linter/src/utils/design_utils.cpp
+    linter/src/utils/config_utils.cpp
     linter/src/utils/module_utils.cpp
     linter/src/utils/class_scope_utils.cpp
     linter/src/utils/init.cpp
@@ -210,6 +211,7 @@ set(LINTER_SRC
     linter/src/rules/invalid_liblist.cpp
     linter/src/rules/undeclared_cell.cpp
     linter/src/rules/undeclared_design.cpp
+    linter/src/rules/undeclared_configuration.cpp
 )
 
 add_library(verihoggLintLib ${LINTER_SRC})
