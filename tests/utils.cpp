@@ -30,23 +30,8 @@ auto GetDesignFromPath(const fs::path& path, SL::ErrorContainer* errors,
   InitCommandLineParser(clp.get());
 
   const std::string path_str = path.string();
-  const std::string lib1Path =
-      path_str + "/../../../../../tests/commonlibs/lib1.sv";
-  const std::string lib2Path =
-      path_str + "/../../../../../tests/commonlibs/lib2.sv";
-  const std::string lib3Path =
-      path_str + "/../../../../../tests/commonlibs/lib3.sv";
-  const size_t argc = 10;
-  std::array<const char*, argc> argv = {"",
-                                        "-v",
-                                        lib1Path.c_str(),
-                                        "-L",
-                                        "lib1",
-                                        "-v",
-                                        lib2Path.c_str(),
-                                        "-v",
-                                        lib3Path.c_str(),
-                                        path_str.c_str()};
+  const size_t argc = 2;
+  std::array<const char*, argc> argv = {"", path_str.c_str()};
   if (!clp->parseCommandLine(argc, argv.data())) {
     std::cerr << "Can't parse command line" << '\n';
   }
