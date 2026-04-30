@@ -116,7 +116,7 @@ const auto allRules = std::to_array<Rule>({
     {.idName = "MULTIPLE_BINS",
      .description = "Specification of multiple bins dimension not allowed",
      .check = CheckMultipleBins},
-    {.idName = "COVERGROUP_EXPRESSION_TYPE",
+    {.idName = "COVERPOINT_EXPRESSION_TYPE",
      .description = "Coverpoint expression should be of an integral data type",
      .check = CheckCoverpointExpressionType},
     {.idName = "DPI_DECLARATION_STRING",
@@ -189,9 +189,6 @@ const auto allRules = std::to_array<Rule>({
     {.idName = "MISSING_FOR_LOOP_STEP",
      .description = "'for' loop step required",
      .check = CheckMissingForLoopStep},
-    // {.idName = "MISSING_TASK_IMPLEMENTATION",
-    //  .description = "extern task is not implemented",
-    //  .check = nullptr},
     {.idName = "MULTIPLE_DOT_STAR_CONNECTIONS",
      .description = "'.*' cannot appear more than once in the port list",
      .check = CheckMultipleDotStarConnections},
@@ -239,6 +236,9 @@ const auto allRules = std::to_array<Rule>({
     {.idName = "TYPE_CASTING",
      .description = "Expecting tick before type casting expression",
      .check = CheckTypeCasting},
+    // TODO(Andrey): next function combines multiple checks:
+    // - WILDCARD_EQUALITY_OPERATOR
+    // - WILDCARD_INEQUALITY_OPERATOR
     {.idName = "WILDCARD_EQUALITY_OPERATOR",
      .description = "Expecting wildcard operator '==?' instead of '=?='",
      .check = CheckWildcardOperators},
@@ -257,9 +257,16 @@ const auto globalRules = std::to_array<GlobalRule>({
     {.idName = "NOF_PARAMETER_OVERRIDES",
      .description = "Expected # parameter overrides, found #module; endmodule",
      .check = CheckNofParameterOverrides},
+    // TODO(Andrey): next function combines multiple checks:
+    // - MISSING_FUNCTION_IMPLEMENTATION
+    // - MISSING_TASK_IMPLEMENTATION
     {.idName = "MISSING_FUNCTION_IMPLEMENTATION",
      .description = "extern function is not implemented",
      .check = CheckMissingFunctionImplementation},
+    // TODO(Andrey): next function combines multiple checks:
+    // - FUNCTION_IMPLEMENTATION_SCOPE
+    // - TASK_IMPLEMENTATION_SCOPE,
+    // - CONSTRAINT_IMPLEMENTATION_SCOPE
     {.idName = "FUNCTION_IMPLEMENTATION_SCOPE",
      .description = "extern task implemented outside of its class scope",
      .check = CheckFuncImplScope},
@@ -278,13 +285,19 @@ const auto globalRules = std::to_array<GlobalRule>({
      .description = "Argument type of method must be the same as prototype "
                     "argument type (non-standard use of type alias)",
      .check = CheckMethodImplementationArgumentType},
+    {.idName = "FATAL_SYSTEM_TASK_FIRST_ARGUMENT",
+     .description = "TODO(Andrey): Description",
+     .check = [](auto...) { /*TODO(Andrey): actual check */ }},
 });
 
 constexpr size_t AllGlobalRulesSize = globalRules.size();
 
 constexpr size_t TotalRuleCount = AllRulesSize + AllGlobalRulesSize;
 
-static_assert(TotalRuleCount == verihogg_lint::kLintRules.size());
+static_assert(TotalRuleCount + /* CheckWildcardOperators */ 1 +
+                  /* CheckMissingFunctionImplementation */ 1 +
+                  /* CheckFuncImplScope */ 2 ==
+              verihogg_lint::kLintRules.size());
 }  // namespace RuleInfo
 
 void RunAllRulesOnDesign(SURELOG::Design* design, const vpiHandle& uhdmDesign,
