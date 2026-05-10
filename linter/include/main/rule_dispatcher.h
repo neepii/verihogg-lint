@@ -265,9 +265,6 @@ const auto allRules = std::to_array<Rule>({
      .description = "Operand of type not allowed with logical negation (use == "
                     "null instead)",
      .check = CheckLogicalNegation},
-    {.idName = "WILDCARD_EQUALITY_OPERATOR",
-     .description = "Expecting wildcard operator '==?' instead of '=?='",
-     .check = CheckWildcardOperators},
     {.idName = "INVALID_LIBLIST",
      .description = "Liblist must have at least one entry",
      .check = CheckInvalidLiblist},
