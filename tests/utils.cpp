@@ -15,6 +15,7 @@
 #include "Surelog/Library/Library.h"
 #include "Surelog/Library/LibrarySet.h"
 #include "Surelog/SourceCompile/SymbolTable.h"
+#include "main/lint_rules.h"
 #include "utils/init.h"
 
 namespace SL = SURELOG;
@@ -77,8 +78,7 @@ void CheckWithNoErrorsExpected(
 }
 
 void CheckWithErrorsExpected(
-    const fs::path& tests_path,
-    SURELOG::ErrorDefinition::ErrorType errorIdExpected,
+    const fs::path& tests_path, verihogg_lint::LintIdEnum errorIdExpected,
     const std::unordered_set<SURELOG::ErrorDefinition::ErrorType>& ignoreList,
     const std::function<void(const SL::FileContent*, SL::ErrorContainer*,
                              SL::SymbolTable*)>& check_func) {
@@ -133,8 +133,7 @@ void CheckWithNoErrorsExpected(
 }
 
 void CheckWithErrorsExpected(
-    const fs::path& tests_path,
-    SURELOG::ErrorDefinition::ErrorType errorIdExpected,
+    const fs::path& tests_path, verihogg_lint::LintIdEnum errorIdExpected,
     const std::unordered_set<SURELOG::ErrorDefinition::ErrorType>& ignoreList,
     const std::function<void(SL::Design*, SL::ErrorContainer*,
                              SL::SymbolTable*)>& check_func) {
